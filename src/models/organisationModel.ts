@@ -9,12 +9,11 @@ const schema: any = {
     },
     address: {
         type: String,
-        required: true
+        required: false
     },
-    status:{
-        type: Number,
+    isActive:{
+        type: Boolean,
         required: true,
-        enum: [0,1],
     },
     createdAt: {
        type: Date,

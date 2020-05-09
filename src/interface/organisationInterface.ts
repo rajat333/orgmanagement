@@ -1,8 +1,9 @@
 
-interface Organisation {
+interface OrganisationInterface {
 
     name: String,
     isActive: Boolean,
-    address :String,
+    // address :String,
     
 };
+export default OrganisationInterface;

@@ -1,4 +1,6 @@
-import { getUserList, addNewUser,updateUser,deleteUser, fetchUser } from '../controllers/userController';
+import { getUserList, addNewUser,updateUser,
+    deleteUser, fetchUser ,createOrgnizationAdmin
+} from '../controllers/userController';
 
 const userRoutes = (app) => {
     
@@ -10,8 +12,8 @@ const userRoutes = (app) => {
         res.send("User Route Work Successfully");
         next();
     }, getUserList)
-    // Create User
-    .post(addNewUser)
+    // Create Org Admin User
+    .post(createOrgnizationAdmin)
     //Update User
     .put(updateUser)
     // delete request

@@ -1,14 +1,13 @@
 
-interface UserInterface {
+interface OrganisationAdminInterface {
 
     firstName: String,
     lastName: String,
     email: String,
     isActive: true,
-    organisation: String,
     phone:Number,
+    organisation: String,
     userName: String,
-    role: String,
 };
 
-export default UserInterface;
+export default OrganisationAdminInterface;

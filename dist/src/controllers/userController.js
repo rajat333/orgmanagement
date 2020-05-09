@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = require("../models/userModel");
+const organisationModel_1 = require("../models/organisationModel");
 exports.getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userList = yield userModel_1.User.find({}).lean();
@@ -34,4 +35,36 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.fetchUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.createOrgnizationAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let orgData = req.body;
+        let existOrg = yield organisationModel_1.Organisation.find({ name: orgData.organisation }).lean();
+        if (existOrg && existOrg.length < 1) {
+            console.log(" in if ");
+            // create user for organisation and org as well 
+            let newOrg = { name: orgData.organisation, isActive: true };
+            let createdOrg = new organisationModel_1.Organisation(newOrg);
+            createdOrg.save(function (err, data) {
+                if (err)
+                    throw err;
+                let orgAdminUser = Object.assign(Object.assign({}, orgData), { organisation: data._id, role: 'OrgAdmin' });
+                console.log("orgAdminUser orgAdminUser", orgAdminUser);
+                let newlyOrgUser = new userModel_1.User(orgAdminUser);
+                newlyOrgUser.save(function (err, data) {
+                    if (err)
+                        throw err;
+                    console.log('org Admin User is ', data);
+                    res.send(Object.assign({}, data));
+                });
+            });
+        }
+        else {
+            res.send({ message: "Org aleady exist or not an active organisation" });
+        }
+    }
+    catch (e) {
+        console.log("Exception occur ", e);
+        res.send({ message: "Exception Occur" });
+    }
 });

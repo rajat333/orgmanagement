@@ -10,8 +10,8 @@ const userRoutes = (app) => {
         res.send("User Route Work Successfully");
         next();
     }, userController_1.getUserList)
-        // Create User
-        .post(userController_1.addNewUser)
+        // Create Org Admin User
+        .post(userController_1.createOrgnizationAdmin)
         //Update User
         .put(userController_1.updateUser)
         // delete request
