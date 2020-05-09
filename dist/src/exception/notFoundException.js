@@ -15,3 +15,17 @@ class NormalException extends HttpException_1.default {
 }
 exports.NormalException = NormalException;
 ;
+class NotAuthorizedException extends HttpException_1.default {
+    constructor() {
+        super(403, "You're not authorized");
+    }
+}
+exports.NotAuthorizedException = NotAuthorizedException;
+;
+class WrongCredentialsException extends HttpException_1.default {
+    constructor() {
+        super(401, 'Wrong credentials provided');
+    }
+}
+exports.WrongCredentialsException = WrongCredentialsException;
+;
