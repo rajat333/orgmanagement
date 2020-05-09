@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
 const crmRoutes_1 = require("./src/routes/crmRoutes");
 const userRoute_1 = require("./src/routes/userRoute");
 const organisationRoute_1 = require("./src/routes/organisationRoute");
@@ -10,12 +11,13 @@ const createMessage_1 = require("./src/controllers/createMessage");
 const settings_1 = require("./settings");
 const loggerMiddleware_1 = require("./src/middleware/loggerMiddleware");
 const app = express();
+dotenv.config();
 // instance of our class
-let messages = new createMessage_1.default(settings_1.Settings.PORT);
+let messages = new createMessage_1.default(process.env.PORT);
 const dataConnection = (user, pass) => {
-    return `mongodb://localhost/amit`;
+    return `mongodb://localhost/${process.env.DB_Name}`;
 };
-let database = dataConnection(settings_1.Settings.mlabUser, settings_1.Settings.mlabPass);
+let database = dataConnection(process.env.DB_User, process.env.DB_Password);
 // mongoose connection
 mongoose.connect(database, {
     useMongoClient: true

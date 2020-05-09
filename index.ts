@@ -13,14 +13,12 @@ import loggerMiddleware from './src/middleware/loggerMiddleware';
 const app = express();
 dotenv.config();
 // instance of our class
-let messages = new messenger(Settings.PORT);
+let messages = new messenger(process.env.PORT);
 
 const dataConnection = (user: string, pass: string): string => {
-    return `mongodb://localhost/amit`
+    return `mongodb://localhost/${process.env.DB_Name}`
 }
-
-let database = dataConnection(Settings.mlabUser, Settings.mlabPass);
-
+let database = dataConnection(process.env.DB_User, process.env.DB_Password);
 // mongoose connection
 mongoose.connect(database, {
     useMongoClient: true
