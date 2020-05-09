@@ -7,7 +7,7 @@ import UserInterface  from  '../interface/userInterface';
 import OrganisationAdminInterface from '../interface/organisationAdminInterface';
 import OrganisationInterface from '../interface/organisationInterface';
 import LoginInterface from  '../interface/loginInterface';
-import  {WrongCredentialsException  } from  '../exception/notFoundException';
+import  {WrongCredentialsException, NotAuthorizedException  } from  '../exception/notFoundException';
 import AuthMiddleware from '../middleware/authentication.middleware';
 
 export const getUserList = async(req: Request, res:Response) => {
@@ -46,10 +46,14 @@ export const login = async( req:Request, res:Response , next: express.NextFuncti
 
         try{    
             let loginData: LoginInterface = req.body;
-            let validUser =  await User.find({ username:{ $regex: loginData.username } });
-            // generate Token 
-            let token = AuthMiddleware.createToken( validUser);
-            res.send({ message:'Successful Login',...validUser, token: token });
+            let validUser =  await User.find({ userName:{ $regex: loginData.username , $options: 'i'} }).lean();
+            if(validUser.length >0){
+                // generate Token 
+                let tokenData = AuthMiddleware.createToken( validUser);
+                res.send({ message:'Successful Login', ...validUser[0], token: tokenData.token });
+            }else{
+                next( new NotAuthorizedException());
+            }
         }catch(e){
             console.log('Login Exception',e);
             next(  new WrongCredentialsException() );
@@ -74,12 +78,19 @@ export const createOrgnizationAdmin = async(req: Request, res:Response)=>{
                 newlyOrgUser.save(function(err,data){
                     if(err) throw err;
                     console.log('org Admin User is ',data);
-                    res.send({ ...data });
+                    const responsebj  = {
+                        firstName: data.toObject().firstName,
+                        userName: data.toObject().userName,
+                        lastName: data.toObject().lastName,
+                        email: data.toObject().email,
+                        userId: data.toObject()._id,
+                    }
+                    res.send( responsebj );
                 })
 
             })
         }else{
-        res.send({ message:"Org aleady exist or not an active organisation" });
+        res.send({ message: "Org aleady exist or not an active organisation" });
     }
     }catch(e){
         console.log("Exception occur ",e);

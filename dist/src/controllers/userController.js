@@ -44,10 +44,18 @@ exports.fetchUser = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let loginData = req.body;
-        let validUser = yield userModel_1.User.find({ username: { $regex: loginData.username } });
-        // generate Token 
-        let token = authentication_middleware_1.default.createToken(validUser);
-        res.send(Object.assign(Object.assign({ message: 'Successful Login' }, validUser), { token: token }));
+        let validUser = yield userModel_1.User.find({ userName: { $regex: loginData.username, $options: 'i' } }).lean();
+        let d = yield userModel_1.User.find({}).lean();
+        console.log("ddddddddddddddddd ", d);
+        if (validUser.length > 0) {
+            // generate Token 
+            let tokenData = authentication_middleware_1.default.createToken(validUser);
+            console.log("validUser validUser", validUser);
+            res.send(Object.assign(Object.assign({ message: 'Successful Login' }, validUser[0]), { token: tokenData.token }));
+        }
+        else {
+            next(new notFoundException_1.NotAuthorizedException());
+        }
     }
     catch (e) {
         console.log('Login Exception', e);
@@ -73,7 +81,14 @@ exports.createOrgnizationAdmin = (req, res) => __awaiter(void 0, void 0, void 0,
                     if (err)
                         throw err;
                     console.log('org Admin User is ', data);
-                    res.send(Object.assign({}, data));
+                    const responsebj = {
+                        firstName: data.toObject().firstName,
+                        userName: data.toObject().userName,
+                        lastName: data.toObject().lastName,
+                        email: data.toObject().email,
+                        userId: data.toObject()._id,
+                    };
+                    res.send(responsebj);
                 });
             });
         }
