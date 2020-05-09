@@ -7,10 +7,12 @@ import OrganisationAdminInterface from '../interface/organisationAdminInterface'
 import OrganisationInterface from '../interface/organisationInterface';
 export const getUserList = async(req: Request, res:Response) => {
     try{
-        const userList = await User.find({}).lean();
-        res.send(userList);
+        const org = Organisation.find({  name: { $regex: req.body.organisation , $option: 'i'} });
+        const userList = await User.find({ organisation : mongoose.Types.ObjectId(org[0]._id) }).lean();
+        res.send({ userList: userList });
     }catch(e){
         console.log("Exception Occur");
+        res.send({ message:"Exception Occur" });
     }
 };
 export const addNewUser = async(req :Request ,res: Response)=>{
