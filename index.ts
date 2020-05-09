@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
+import * as dotenv from "dotenv";
 import routes from './src/routes/crmRoutes';
 import  userRoutes from './src/routes/userRoute';
 import organisationRoutes from './src/routes/organisationRoute';
@@ -10,7 +11,7 @@ import { Settings } from './settings';
 import loggerMiddleware from './src/middleware/loggerMiddleware';
  
 const app = express();
-
+dotenv.config();
 // instance of our class
 let messages = new messenger(Settings.PORT);
 
