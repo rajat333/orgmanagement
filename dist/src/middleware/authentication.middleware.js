@@ -22,10 +22,18 @@ class Authentication {
         };
     }
     ;
-    verifyToken(req) {
-        const verificationResponse = jwt.verify(req.headers.Authorization, this.secret);
-        const id = verificationResponse.userId;
-        return verificationResponse;
+    verifyToken(req, res, next) {
+        try {
+            console.log("in verify token ");
+            const verificationResponse = jwt.verify(req.headers.Authorization, process.env.JWT_SECRET);
+            console.log("verificationResponse verificationResponse", verificationResponse);
+            const id = verificationResponse.userId;
+            return verificationResponse;
+        }
+        catch (e) {
+            console.log("exception occur", e);
+            res.status(401).send({ message: "Not Authorized" });
+        }
     }
 }
 ;

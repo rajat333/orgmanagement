@@ -1,8 +1,9 @@
 import * as jwt from 'jsonwebtoken';
 import UserInterface from '../interface/userInterface';
 import { TokenData, TokenPayload } from '../interface/tokenData';
-import { Request,Response } from 'express';
+import { Request,Response, NextFunction } from 'express';
 
+import { NotAuthorizedException } from '../exception/notFoundException';
 class Authentication {
 
     private jwt = jwt;
@@ -26,10 +27,14 @@ class Authentication {
         };
       };
 
-      verifyToken(req: Request): TokenPayload {
-        const verificationResponse = jwt.verify(req.headers.Authorization,this.secret) as TokenPayload;
+      verifyToken(req: Request, res: Response, next: NextFunction): TokenPayload {
+        try{
+        const verificationResponse = jwt.verify(req.headers.Authorization,process.env.JWT_SECRET) as TokenPayload;
         const id = verificationResponse.userId;
         return verificationResponse;
+        }catch(e){
+            res.status(401).send({ message:"Not Authorized" });
+        }
       }
 };
 

@@ -45,12 +45,9 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         let loginData = req.body;
         let validUser = yield userModel_1.User.find({ userName: { $regex: loginData.username, $options: 'i' } }).lean();
-        let d = yield userModel_1.User.find({}).lean();
-        console.log("ddddddddddddddddd ", d);
         if (validUser.length > 0) {
             // generate Token 
             let tokenData = authentication_middleware_1.default.createToken(validUser);
-            console.log("validUser validUser", validUser);
             res.send(Object.assign(Object.assign({ message: 'Successful Login' }, validUser[0]), { token: tokenData.token }));
         }
         else {

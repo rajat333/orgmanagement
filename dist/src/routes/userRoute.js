@@ -8,7 +8,6 @@ const userRoutes = (app) => {
         // middleware
         console.log(`User Route Request from: ${req.originalUrl}`);
         console.log(`Request type: ${req.method}`);
-        res.send("User Route Work Successfully");
         next();
     }, authentication_middleware_1.default.verifyToken, userController_1.getUserList)
         // Create Org Admin User

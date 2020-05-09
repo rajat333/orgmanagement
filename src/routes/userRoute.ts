@@ -10,9 +10,8 @@ const userRoutes = (app) => {
         // middleware
         console.log(`User Route Request from: ${req.originalUrl}`)
         console.log(`Request type: ${req.method}`)
-        res.send("User Route Work Successfully");
         next();
-    }, AuthMiddleware.verifyToken,getUserList)
+      }, AuthMiddleware.verifyToken,getUserList)
     // Create Org Admin User
     .post(createOrgnizationAdmin)
     //Update User
