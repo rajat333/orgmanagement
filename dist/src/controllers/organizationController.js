@@ -27,11 +27,8 @@ exports.listOfOrganization = (req, res) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.listOfOrgUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("req.body.organisation  ", req.body.organisation);
         const org = yield organisationModel_1.Organisation.find({ name: { $regex: req.body.organization, $options: '$i' } });
-        console.log("org org ", org);
         if (org.length > 0) {
-            console.log("org name ", org[0].toObject().name);
             const userList = yield userModel_1.User.find({ organisation: mongoose.Types.ObjectId(org[0]._id) }).lean();
             res.send({ organisation: org[0].toObject().name, userList: userList });
         }
