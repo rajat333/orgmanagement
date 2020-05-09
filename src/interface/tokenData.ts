@@ -8,6 +8,7 @@ interface TokenData {
       email:String,
       firstName:String,
       lastName:String,
+      phone: String
   }
 
   export { TokenData ,TokenPayload };

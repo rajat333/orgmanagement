@@ -1,7 +1,8 @@
 import { getUserList, addNewUser,updateUser,
-    deleteUser, fetchUser ,createOrgnizationAdmin
+    deleteUser, fetchUser ,createOrgnizationAdmin,
+    login
 } from '../controllers/userController';
-
+import AuthMiddleware from  '../middleware/authentication.middleware';
 const userRoutes = (app) => {
     
     app.route('/user')
@@ -11,7 +12,7 @@ const userRoutes = (app) => {
         console.log(`Request type: ${req.method}`)
         res.send("User Route Work Successfully");
         next();
-    }, getUserList)
+    }, AuthMiddleware.verifyToken,getUserList)
     // Create Org Admin User
     .post(createOrgnizationAdmin)
     //Update User
@@ -22,7 +23,10 @@ const userRoutes = (app) => {
    app.route('/user/:id')
      .get( (req,res,next)=>{
         console.log("Fetching user"); 
-     },fetchUser); 
+     },AuthMiddleware.verifyToken, fetchUser); 
+
+    app.route('/user/login')
+    .post(login); 
 }
 
 export default userRoutes;

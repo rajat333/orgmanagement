@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const userModel_1 = require("../models/userModel");
 const organisationModel_1 = require("../models/organisationModel");
+const notFoundException_1 = require("../exception/notFoundException");
 exports.getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const org = organisationModel_1.Organisation.find({ name: { $regex: req.body.organisation, $option: 'i' } });
@@ -38,6 +39,17 @@ exports.updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.fetchUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let loginData = req.body;
+        let validUser = yield userModel_1.User.find({ username: { $regex: loginData.username } });
+        res.send(Object.assign({ message: 'Successful Login' }, validUser));
+    }
+    catch (e) {
+        console.log('Login Exception', e);
+        next(new notFoundException_1.WrongCredentialsException());
+    }
 });
 exports.createOrgnizationAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

@@ -1,10 +1,15 @@
 import * as mongoose from 'mongoose';
 import {  Request, Response } from 'express';
+import * as express from 'express';
 import { User } from '../models/userModel';
 import { Organisation } from '../models/organisationModel';
 import UserInterface  from  '../interface/userInterface';
 import OrganisationAdminInterface from '../interface/organisationAdminInterface';
 import OrganisationInterface from '../interface/organisationInterface';
+import LoginInterface from  '../interface/loginInterface';
+import  {WrongCredentialsException  } from  '../exception/notFoundException';
+import AuthMiddleware from '../middleware/authentication.middleware';
+
 export const getUserList = async(req: Request, res:Response) => {
     try{
         const org = Organisation.find({  name: { $regex: req.body.organisation , $option: 'i'} });
@@ -37,7 +42,20 @@ export const deleteUser = async(req: Request, res:Response)=>{
 export const fetchUser = async(req: Request, res:Response)=>{
     
 };
+export const login = async( req:Request, res:Response , next: express.NextFunction)=>{
 
+        try{    
+            let loginData: LoginInterface = req.body;
+            let validUser =  await User.find({ username:{ $regex: loginData.username } });
+            // generate Token 
+            let token = AuthMiddleware.createToken( validUser);
+            res.send({ message:'Successful Login',...validUser, token: token });
+        }catch(e){
+            console.log('Login Exception',e);
+            next(  new WrongCredentialsException() );
+        }
+
+};
 export const createOrgnizationAdmin = async(req: Request, res:Response)=>{
     try{
     let orgData : OrganisationAdminInterface = req.body;
