@@ -19,14 +19,17 @@ export const listOfOrganization =  async(req: Request, res:Response)=>{
    }
 };
 
-export const userInOrganization =  async(req: Request, res:Response)=>{
-
+export const listOfOrgUser =  async(req: Request, res:Response)=>{
     try{
-        const org = Organisation.find({  name: { $regex: req.body.organisation , $option: 'i'} });
-        const userList = await User.find({ organisation : mongoose.Types.ObjectId(org[0]._id) }).lean();
-        res.send({ organisation:org[0].name, userList: userList });
+        const org = await Organisation.find({  name: { $regex: req.body.organization , $options: '$i'} });
+        if(org.length >0){
+            const userList = await User.find({ organisation : mongoose.Types.ObjectId(org[0]._id) }).lean();
+            res.send({ organisation: org[0].toObject().name, userList: userList });
+        }else{
+            res.send({ message: "Organisation doesn't exist" });
+        }
     }catch(e){
-        console.log("Exception Occur");
+        console.log("Exception Occur",e);
         res.send({ message:"Exception Occur" });
     }
  };

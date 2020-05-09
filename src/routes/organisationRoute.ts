@@ -1,17 +1,17 @@
-import { createOrgnizationUser } from '../controllers/organizationController';
+import { createOrgnizationUser, listOfOrganization,
+    listOfOrgUser
+} from '../controllers/organizationController';
 
 const organisationRoutes = (app) => {
     
-    app.route('/organisationRoute')
+    app.route('/organisation')
     .get((req, res, next) => {
-        // middleware
-        console.log(`organisationRoutes Route Request from: ${req.originalUrl}`)
-        console.log(`Request type: ${req.method}`)
-        res.send("organisationRoutes Route Work Successfully");
-        // next();
-    });
+        console.log("in get list of org");
+        next();
+    },listOfOrganization)
+    .post( createOrgnizationUser );
 
-    app.post('/organisationUserAdd')
-    .post( createOrgnizationUser )
+    app.route('/listOfOrgUser')
+    .post(listOfOrgUser);
 }
 export default organisationRoutes;

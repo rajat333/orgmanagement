@@ -9,15 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 const userModel_1 = require("../models/userModel");
 const organisationModel_1 = require("../models/organisationModel");
 exports.getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userList = yield userModel_1.User.find({}).lean();
-        res.send(userList);
+        const org = organisationModel_1.Organisation.find({ name: { $regex: req.body.organisation, $option: 'i' } });
+        const userList = yield userModel_1.User.find({ organisation: mongoose.Types.ObjectId(org[0]._id) }).lean();
+        res.send({ userList: userList });
     }
     catch (e) {
         console.log("Exception Occur");
+        res.send({ message: "Exception Occur" });
     }
 });
 exports.addNewUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
