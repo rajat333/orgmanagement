@@ -11,6 +11,10 @@ const schema: any = {
         type: String,
         required: 'Enter a last name'
     },
+    userName:{
+        type: String,
+        required: true
+    },
     organisation:{
         type:   Schema.Types.ObjectId,
         ref: 'Organisation'  

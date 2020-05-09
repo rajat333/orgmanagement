@@ -18,6 +18,7 @@ class Authentication {
             firstName: user.firstName,
             lastName: user.lastName,
             userId: user._id,
+            phone: user.phone,
         };
         return {
           expiresIn,

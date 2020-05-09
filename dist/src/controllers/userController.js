@@ -13,6 +13,7 @@ const mongoose = require("mongoose");
 const userModel_1 = require("../models/userModel");
 const organisationModel_1 = require("../models/organisationModel");
 const notFoundException_1 = require("../exception/notFoundException");
+const authentication_middleware_1 = require("../middleware/authentication.middleware");
 exports.getUserList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const org = organisationModel_1.Organisation.find({ name: { $regex: req.body.organisation, $option: 'i' } });
@@ -44,7 +45,9 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     try {
         let loginData = req.body;
         let validUser = yield userModel_1.User.find({ username: { $regex: loginData.username } });
-        res.send(Object.assign({ message: 'Successful Login' }, validUser));
+        // generate Token 
+        let token = authentication_middleware_1.default.createToken(validUser);
+        res.send(Object.assign(Object.assign({ message: 'Successful Login' }, validUser), { token: token }));
     }
     catch (e) {
         console.log('Login Exception', e);
